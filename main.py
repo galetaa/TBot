@@ -68,8 +68,7 @@ def register_user(user_id, username):
     user_check_data = base_comm(user_check_query)
     reg_time = str(dt.datetime.now().year) + ' ' + str(
         dt.datetime.now().month) + ' ' + str(
-        dt.datetime.now().day) + ' ' + str(dt.datetime.now(
-    ).hour) + ' ' + str(dt.datetime.now().minute)
+        dt.datetime.now().day - 1)
     if not user_check_data:
         insert_to_db_query = f'''INSERT INTO USERS (user_id, username, 
                              size_of_dick, last_dick_request) VALUES ({user_id}, 
@@ -115,24 +114,24 @@ def pisun(message):
     last_req_list = list(map(int, base_comm(
         'SELECT last_dick_request FROM users WHERE user_id =' +
         str(message.from_user.id))[0][0].split()))
-    last_req = dt.datetime(last_req_list[0], last_req_list[1], last_req_list[2],
-                           last_req_list[3], last_req_list[4])
+    last_req = dt.datetime(last_req_list[0], last_req_list[1], last_req_list[2])
     edit_sizes = [-10, -5, -6, -7, -4, -3, -2, -1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2,
                   2, 3, 3, 3, 3, -2, -3, -10, -1, 5, 4, 4, 4, 7, 7, 7, 8, 9, 10,
                   11, 2, 2, 4, 4, -3, 3, 6, 6, 2, 2, -1, -10, 5, 5, 3, 2, 2, 6,
                   4, 3, 5, 3, 3, 4, 0, 2, 4, 7, 5, 6, 3, 7, 8, 3, 6, 1, 1, 3, 6,
                   8, 6, 4, -3, -4, 5, 2, 6, 2, 7, 1, 4, 4, -2, -2]
-    if dt.datetime.now() > last_req + dt.timedelta(hours=24):
+    if dt.datetime(dt.datetime.now().year, dt.datetime.now().month,
+                   dt.datetime.now().day) > last_req:
         edit_size_of_dick(message, choice(edit_sizes))
         new_time = str(dt.datetime.now().year) + ' ' + str(
             dt.datetime.now().month) + ' ' + str(
-            dt.datetime.now().day) + ' ' + str(dt.datetime.now(
-        ).hour) + ' ' + str(dt.datetime.now().minute)
+            dt.datetime.now().day)
         base_comm(
-            'UPDATE users SET last_dick_request = ' + '"' + new_time + '"'
+            'UPDATE users SET last_dick_request = ' + "'" + new_time + "'"
             + ' WHERE user_id = ' + str(message.from_user.id))
     else:
-        bot.reply_to(message, 'Жди, ' + choice(insults))
+        bot.reply_to(message, 'Жди, ' + choice(insults) + '. Сегодня на твой '
+                     + choice(names_of_dick) + ' смотреть не буду')
 
 
 def school_schedule():
@@ -183,6 +182,12 @@ def school_schedule():
         return 'Ты ёбнутый?, Иди спи'
 
 
+def top():
+    S = sorted(list(map(list, base_comm('SELECT * FROM users'))), key=lambda
+        x: x[2], reverse=True)
+    return S
+
+
 def console(message):
     bot.reply_to(message, eval(message.text))
 
@@ -193,7 +198,10 @@ message = bot.message_handlers
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.reply_to(message, 'Привет, ' + choice(insults))
+    bot.reply_to(
+        message, 'Привет, ' + choice(
+            insults) +
+                 '. Посмотрим на твой писюн.... так так так... Напиши «/писюн»')
     register_user(message.from_user.id, message.from_user.username)
 
 
@@ -212,6 +220,12 @@ def get_text_messages(message):
             bot.register_next_step_handler(message, console)
         else:
             bot.reply_to(message, 'Иди нахуй отсюда')
+    elif message.text.lower() == '/топ':
+        L = top()
+        for i in range(len(L)):
+            bot.send_message(message.chat.id,
+                             str(i + 1) + '. ' + str(L[i][1]) + ' - ' + str(
+                                 L[i][2]))
 
 
 bot.polling(none_stop=True)
