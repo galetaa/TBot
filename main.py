@@ -14,10 +14,10 @@ names_of_dick = ['пенис', 'член', 'хуй', 'писюн', 'хер', 'е
 
 
 def base_comm(command):
-    with psycopg2.connect(user="phicxvcitlmbuj",
-                          password="0e80d79a63bec606138c087b2312e51d97a4eca87fc84c03e2232f2c3db27275",
-                          host="ec2-54-220-35-19.eu-west-1.compute.amazonaws.com",
-                          port="5432", database="d9q40o7dpeuhj3") as base:
+    with psycopg2.connect(user="tsddxqfczcgkrt",
+                          password="76866820258eaf3ea537e76afc4780d37c31a9b9b39b3baaa7fa209b700432e8",
+                          host="ec2-63-34-97-163.eu-west-1.compute.amazonaws.com",
+                          port="5432", database="d8505ifjvpmnpu") as base:
         cur = base.cursor()
         try:
             cur.execute(command)
@@ -42,18 +42,18 @@ def create_tables():
 
 
 def print_base():
-    with psycopg2.connect(user="phicxvcitlmbuj",
-                          password="0e80d79a63bec606138c087b2312e51d97a4eca87fc84c03e2232f2c3db27275",
-                          host="ec2-54-220-35-19.eu-west-1.compute.amazonaws.com",
-                          port="5432", database="d9q40o7dpeuhj3") as base:
+    with psycopg2.connect(user="tsddxqfczcgkrt",
+                          password="76866820258eaf3ea537e76afc4780d37c31a9b9b39b3baaa7fa209b700432e8",
+                          host="ec2-63-34-97-163.eu-west-1.compute.amazonaws.com",
+                          port="5432", database="d8505ifjvpmnpu") as base:
         cur = base.cursor()
         cur.execute('SELECT * FROM users')
         res = cur.fetchall()
-        x = PrettyTable()
-        x.field_names = ['id', 'Nickname', 'Dick', 'Dick Time']
-        for i in res:
-            x.add_row(i)
-        return x
+    x = PrettyTable()
+    x.field_names = ['id', 'Nickname', 'Dick', 'Dick Time']
+    for i in res:
+        x.add_row(i)
+    return x
 
 
 def reply_size_of_dick(message):
@@ -191,7 +191,7 @@ def top():
 def console(message):
     bot.reply_to(message, eval(message.text))
 
-
+#base_comm("UPDATE users SET size_of_dick = 7 WHERE user_id = 610736217")
 bot = telebot.TeleBot('1791565125:AAH0BxQSJROn2zQLHkpKwtFlNB2sUuoTqfg')
 message = bot.message_handlers
 
