@@ -26,7 +26,7 @@ def base_comm(command):
         try:
             result = cur.fetchall()
         except Error:
-            result = None
+            result = [['None']]
         base.commit()
         cur.close()
         return result
@@ -64,11 +64,11 @@ def reply_size_of_dick(message):
 
 
 def register_user(user_id, username):
-    user_check_query = f'SELECT * FROM USERS WHERE user_id = {user_id};'
-    user_check_data = base_comm(user_check_query)
-    reg_time = str(dt.datetime.now().year) + ' ' + str(
-        dt.datetime.now().month) + ' ' + str(
-        dt.datetime.now().day - 1)
+    user_check_data = base_comm(
+        f'SELECT * FROM USERS WHERE user_id = {user_id};')
+    date_now = dt.datetime.now() + dt.timedelta(hours=3) - dt.timedelta(days=1)
+    reg_time = str(date_now.year) + ' ' + str(date_now.month) + ' ' + str(
+        date_now.day)
     if not user_check_data:
         insert_to_db_query = f'''INSERT INTO USERS (user_id, username, 
                              size_of_dick, last_dick_request) VALUES ({user_id}, 
@@ -103,10 +103,10 @@ def edit_size_of_dick(message, new_size):
 
 
 def current_time():
-    new_time = str(dt.datetime.now().year) + ' ' + str(
-        dt.datetime.now().month) + ' ' + str(
-        dt.datetime.now().day) + ' ' + str(dt.datetime.now(
-    ).hour) + ' ' + str(dt.datetime.now().minute)
+    date_now = dt.datetime.now() + dt.timedelta(hours=3)
+    new_time = str(date_now.year) + '-' + str(date_now.month) + '-' + str(
+        date_now.day) + '-' + str(date_now.hour) + '-' + str(dt.datetime.now(
+    ).minute)
     return new_time
 
 
@@ -120,12 +120,12 @@ def pisun(message):
                   11, 2, 2, 4, 4, -3, 3, 6, 6, 2, 2, -1, -10, 5, 5, 3, 2, 2, 6,
                   4, 3, 5, 3, 3, 4, 0, 2, 4, 7, 5, 6, 3, 7, 8, 3, 6, 1, 1, 3, 6,
                   8, 6, 4, -3, -4, 5, 2, 6, 2, 7, 1, 4, 4, -2, -2]
-    if dt.datetime(dt.datetime.now().year, dt.datetime.now().month,
-                   dt.datetime.now().day) > last_req:
+    date_now = dt.datetime.now() + dt.timedelta(hours=3)
+    if dt.datetime(date_now.year, date_now.month, date_now.day) > last_req:
         edit_size_of_dick(message, choice(edit_sizes))
-        new_time = str(dt.datetime.now().year) + ' ' + str(
-            dt.datetime.now().month) + ' ' + str(
-            dt.datetime.now().day)
+        new_time = str(date_now.year) + ' ' + str(
+            date_now.month) + ' ' + str(
+            date_now.day)
         base_comm(
             'UPDATE users SET last_dick_request = ' + "'" + new_time + "'"
             + ' WHERE user_id = ' + str(message.from_user.id))
@@ -165,7 +165,7 @@ def school_schedule():
         (dt.timedelta(hours=14, minutes=5), dt.timedelta(hours=14, minutes=45))]
 
     date_week = dt.datetime.now().weekday()
-    time = dt.timedelta(hours=int(dt.datetime.now().hour),
+    time = dt.timedelta(hours=int(dt.datetime.now().hour) + 3,
                         minutes=dt.datetime.now().minute)
 
     flag = 0
@@ -191,7 +191,8 @@ def top():
 def console(message):
     bot.reply_to(message, eval(message.text))
 
-#base_comm("UPDATE users SET size_of_dick = 7 WHERE user_id = 610736217")
+
+# base_comm("UPDATE users SET size_of_dick = 7 WHERE user_id = 610736217")
 bot = telebot.TeleBot('1791565125:AAH0BxQSJROn2zQLHkpKwtFlNB2sUuoTqfg')
 message = bot.message_handlers
 
@@ -207,17 +208,20 @@ def start(message):
 
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
-    if message.text.lower() == 'длина хуя':
+    if message.text.lower() == '/длина':
         reply_size_of_dick(message)
-    elif message.text.lower() == 'расписание':
+    elif message.text.lower() == '/расписание':
         bot.reply_to(message, school_schedule())
     elif message.text.lower() == '/писюн':
         pisun(message)
-    elif message.text.lower() == 'время':
+    elif message.text.lower() == '/время':
         bot.reply_to(message, current_time())
     elif message.text.lower() == 'консоль':
         if message.from_user.id == 410718594:
-            bot.register_next_step_handler(message, console)
+            try:
+                bot.register_next_step_handler(message, console)
+            except Error:
+                bot.reply_to(message, 'Неправильная команда')
         else:
             bot.reply_to(message, 'Иди нахуй отсюда')
     elif message.text.lower() == '/топ':
