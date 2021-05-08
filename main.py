@@ -192,7 +192,11 @@ def console(message):
     bot.reply_to(message, eval(message.text))
 
 
-# base_comm("UPDATE users SET size_of_dick = 7 WHERE user_id = 610736217")
+def edit_base(cell, new_value, user_id):
+    base_comm(f"UPDATE users SET {cell} = {new_value} WHERE user_id = "
+              f"{user_id}")
+
+
 bot = telebot.TeleBot('1791565125:AAH0BxQSJROn2zQLHkpKwtFlNB2sUuoTqfg')
 message = bot.message_handlers
 
