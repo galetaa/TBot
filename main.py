@@ -11,6 +11,39 @@ insults = ['пидор', 'лох', 'пидорас', 'чмо', 'чмошник',
            'мудозвон', 'мудак', 'гнида']
 names_of_dick = ['пенис', 'член', 'хуй', 'писюн', 'хер', 'елдак', 'дилдак',
                  'удав']
+edit_sizes = [-10, -5, -6, -7, -4, -3, -2, -1, 1, 1, 1, 1, 2, 2, 2, 2,
+              2, 3, 3, 3, 3, -2, -3, -10, -1, 5, 4, 4, 4, 7, 7, 7, 8, 9, 10,
+              11, 2, 2, 4, 4, -3, 3, 6, 6, 2, 2, -1, -10, 5, 5, 3, 2, 2, 6,
+              4, 3, 5, 3, 3, 4, 0, 2, 4, 7, 5, 6, 3, 7, 8, 3, 6, 1, 1, 3, 6,
+              8, 6, 4, -3, -4, 5, 2, 6, 2, 7, 1, 4, 4, -2, -2, 5, 4, 5, 3, -2,
+              -5, 6, 4, 3, 4, 4, 4, 7, 7, 8, 6, 7, 5, 9, 6, 7, 2, 3, -3 - 3 - 3]
+TUESDAY = [
+    (dt.timedelta(hours=8, minutes=30), dt.timedelta(hours=9, minutes=10)),
+    (dt.timedelta(hours=9, minutes=25), dt.timedelta(hours=10, minutes=5)),
+    (dt.timedelta(hours=10, minutes=20), dt.timedelta(hours=11)),
+    (
+        dt.timedelta(hours=11, minutes=15),
+        dt.timedelta(hours=11, minutes=35)),
+    (
+        dt.timedelta(hours=11, minutes=40),
+        dt.timedelta(hours=12, minutes=20)),
+    (
+        dt.timedelta(hours=12, minutes=35),
+        dt.timedelta(hours=13, minutes=15)),
+    (
+        dt.timedelta(hours=13, minutes=30),
+        dt.timedelta(hours=14, minutes=10)),
+    (dt.timedelta(hours=14, minutes=20), dt.timedelta(hours=15))]
+OTHER = [
+    (dt.timedelta(hours=8, minutes=30), dt.timedelta(hours=9, minutes=10)),
+    (dt.timedelta(hours=9, minutes=25), dt.timedelta(hours=10, minutes=5)),
+    (dt.timedelta(hours=10, minutes=20), dt.timedelta(hours=11)),
+    (dt.timedelta(hours=11, minutes=20), dt.timedelta(hours=12)),
+    (dt.timedelta(hours=12, minutes=20), dt.timedelta(hours=13)),
+    (
+        dt.timedelta(hours=13, minutes=15),
+        dt.timedelta(hours=13, minutes=55)),
+    (dt.timedelta(hours=14, minutes=5), dt.timedelta(hours=14, minutes=45))]
 
 
 def base_comm(command):
@@ -115,11 +148,6 @@ def pisun(message):
         'SELECT last_dick_request FROM users WHERE user_id =' +
         str(message.from_user.id))[0][0].split()))
     last_req = dt.datetime(last_req_list[0], last_req_list[1], last_req_list[2])
-    edit_sizes = [-10, -5, -6, -7, -4, -3, -2, -1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2,
-                  2, 3, 3, 3, 3, -2, -3, -10, -1, 5, 4, 4, 4, 7, 7, 7, 8, 9, 10,
-                  11, 2, 2, 4, 4, -3, 3, 6, 6, 2, 2, -1, -10, 5, 5, 3, 2, 2, 6,
-                  4, 3, 5, 3, 3, 4, 0, 2, 4, 7, 5, 6, 3, 7, 8, 3, 6, 1, 1, 3, 6,
-                  8, 6, 4, -3, -4, 5, 2, 6, 2, 7, 1, 4, 4, -2, -2]
     date_now = dt.datetime.now() + dt.timedelta(hours=3)
     if dt.datetime(date_now.year, date_now.month, date_now.day) > last_req:
         edit_size_of_dick(message, choice(edit_sizes))
@@ -135,41 +163,10 @@ def pisun(message):
 
 
 def school_schedule():
-    TUESDAY = [
-        (dt.timedelta(hours=8, minutes=30), dt.timedelta(hours=9, minutes=10)),
-        (dt.timedelta(hours=9, minutes=25), dt.timedelta(hours=10, minutes=5)),
-        (dt.timedelta(hours=10, minutes=20), dt.timedelta(hours=11)),
-        (
-            dt.timedelta(hours=11, minutes=15),
-            dt.timedelta(hours=11, minutes=35)),
-        (
-            dt.timedelta(hours=11, minutes=40),
-            dt.timedelta(hours=12, minutes=20)),
-        (
-            dt.timedelta(hours=12, minutes=35),
-            dt.timedelta(hours=13, minutes=15)),
-        (
-            dt.timedelta(hours=13, minutes=30),
-            dt.timedelta(hours=14, minutes=10)),
-        (dt.timedelta(hours=14, minutes=20), dt.timedelta(hours=15))]
-
-    OTHER = [
-        (dt.timedelta(hours=8, minutes=30), dt.timedelta(hours=9, minutes=10)),
-        (dt.timedelta(hours=9, minutes=25), dt.timedelta(hours=10, minutes=5)),
-        (dt.timedelta(hours=10, minutes=20), dt.timedelta(hours=11)),
-        (dt.timedelta(hours=11, minutes=20), dt.timedelta(hours=12)),
-        (dt.timedelta(hours=12, minutes=20), dt.timedelta(hours=13)),
-        (
-            dt.timedelta(hours=13, minutes=15),
-            dt.timedelta(hours=13, minutes=55)),
-        (dt.timedelta(hours=14, minutes=5), dt.timedelta(hours=14, minutes=45))]
-
     date_week = dt.datetime.now().weekday()
     time = dt.timedelta(hours=int(dt.datetime.now().hour) + 3,
                         minutes=dt.datetime.now().minute)
-
     flag = 0
-
     if date_week == 1:
         for i in TUESDAY:
             if i[0] <= time <= i[1]:
@@ -183,13 +180,20 @@ def school_schedule():
 
 
 def top():
-    S = sorted(list(map(list, base_comm('SELECT * FROM users'))), key=lambda
-        x: x[2], reverse=True)
-    return S
+    try:
+        S = sorted(list(map(list, base_comm('SELECT * FROM users'))), key=lambda
+            x: x[2], reverse=True)
+        return S
+    except Error:
+        return 'Error'
 
 
 def console(message):
-    bot.reply_to(message, eval(message.text))
+    try:
+        result = eval(message.text)
+    except Error:
+        result = 'Error'
+    bot.reply_to(message, result)
 
 
 def edit_base(cell, new_value, user_id):
@@ -222,9 +226,9 @@ def get_text_messages(message):
         bot.reply_to(message, school_schedule())
     elif message.text.lower() == '/писюн':
         pisun(message)
-    elif message.text.lower() == '/время':
+    elif message.text.lower() == '/time':
         bot.reply_to(message, current_time())
-    elif message.text.lower() == 'консоль':
+    elif message.text.lower() == 'cmd':
         if message.from_user.id == 410718594:
             try:
                 bot.register_next_step_handler(message, console)
@@ -233,11 +237,12 @@ def get_text_messages(message):
         else:
             bot.reply_to(message, 'Иди нахуй отсюда')
     elif message.text.lower() == '/топ':
-        L = top()
-        for i in range(len(L)):
+        top_list = top()
+        for i in range(len(top_list)):
             bot.send_message(message.chat.id,
-                             str(i + 1) + '. ' + str(L[i][1]) + ' - ' + str(
-                                 L[i][2]))
+                             str(i + 1) + '. ' + str(
+                                 top_list[i][1]) + ' - ' + str(
+                                 top_list[i][2]))
 
 
 bot.polling(none_stop=True)
