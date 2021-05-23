@@ -188,6 +188,15 @@ def top():
         return 'Error'
 
 
+def send_to(chat, message, number_of_message=1):
+    try:
+        for i in range(number_of_message):
+            bot.send_message(chat, message)
+        return 'Success'
+    except Error:
+        return 'Error'
+
+
 def console(message):
     try:
         result = eval(message.text)
