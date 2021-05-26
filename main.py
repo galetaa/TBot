@@ -75,13 +75,7 @@ def create_tables():
 
 
 def print_base():
-    with psycopg2.connect(user="tsddxqfczcgkrt",
-                          password="76866820258eaf3ea537e76afc4780d37c31a9b9b39b3baaa7fa209b700432e8",
-                          host="ec2-63-34-97-163.eu-west-1.compute.amazonaws.com",
-                          port="5432", database="d8505ifjvpmnpu") as base:
-        cur = base.cursor()
-        cur.execute('SELECT * FROM users')
-        res = cur.fetchall()
+    res = base_comm('SELECT * FROM users')
     x = PrettyTable()
     x.field_names = ['id', 'Nickname', 'Dick', 'Dick Time']
     for i in res:
@@ -110,13 +104,11 @@ def register_user(user_id, username):
 
 
 def edit_size_of_dick(message, new_size):
-    prev_size = base_comm(
-        'SELECT size_of_dick FROM users WHERE user_id =' +
-        str(message.from_user.id))[0][0]
+    prev_size = base_comm('SELECT size_of_dick FROM users WHERE user_id =' +
+                          str(message.from_user.id))[0][0]
     if (new_size != 0) and (prev_size + new_size >= 0):
-        base_comm(
-            'UPDATE users SET size_of_dick = ' + str(prev_size + new_size)
-            + ' WHERE user_id = ' + str(message.from_user.id))
+        base_comm('UPDATE users SET size_of_dick = ' + str(prev_size + new_size)
+                  + ' WHERE user_id = ' + str(message.from_user.id))
         if new_size > 0:
             bot.reply_to(message,
                          'Твой ' + choice(names_of_dick) + ' вырос на '
@@ -129,9 +121,8 @@ def edit_size_of_dick(message, new_size):
                          + ' см. Теперь он ' + str(new_size + prev_size)
                          + '-сантиметровый')
     else:
-        base_comm(
-            'UPDATE users SET size_of_dick = ' + str(0)
-            + ' WHERE user_id = ' + str(message.from_user.id))
+        base_comm('UPDATE users SET size_of_dick = ' + str(0)
+                  + ' WHERE user_id = ' + str(message.from_user.id))
         bot.reply_to(message, 'Твой ' + choice(names_of_dick) + ' отвалился...')
 
 
@@ -154,9 +145,8 @@ def pisun(message):
         new_time = str(date_now.year) + ' ' + str(
             date_now.month) + ' ' + str(
             date_now.day)
-        base_comm(
-            'UPDATE users SET last_dick_request = ' + "'" + new_time + "'"
-            + ' WHERE user_id = ' + str(message.from_user.id))
+        base_comm('UPDATE users SET last_dick_request = ' + "'" + new_time + "'"
+                  + ' WHERE user_id = ' + str(message.from_user.id))
     else:
         bot.reply_to(message, 'Жди, ' + choice(insults) + '. Сегодня на твой '
                      + choice(names_of_dick) + ' смотреть не буду')
@@ -231,7 +221,7 @@ def start(message):
 def get_text_messages(message):
     if message.text.lower() == '/длина':
         reply_size_of_dick(message)
-    elif message.text.lower() == '/расписание':
+    elif message.text.lower() == '/school':
         bot.reply_to(message, school_schedule())
     elif message.text.lower() == '/писюн':
         pisun(message)
@@ -239,10 +229,7 @@ def get_text_messages(message):
         bot.reply_to(message, current_time())
     elif message.text.lower() == 'cmd':
         if message.from_user.id == 410718594:
-            try:
-                bot.register_next_step_handler(message, console)
-            except Error:
-                bot.reply_to(message, 'Неправильная команда')
+            bot.register_next_step_handler(message, console)
         else:
             bot.reply_to(message, 'Иди нахуй отсюда')
     elif message.text.lower() == '/топ':
