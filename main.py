@@ -180,6 +180,32 @@ def top():
         return 'Error'
 
 
+def send_pizda(messag):
+    a = messag.text.lower()
+    if a == 'да':
+        bot.send_message(messag.chat.id, 'Пизда')
+
+
+def which_size(messag):
+    global msg
+    try:
+        a = float(messag.text)
+        if a <= 14:
+            bot.reply_to(messag, 'у тебя короткая пипка')
+        elif 14 < a < 20:
+            msg = bot.send_message(messag.chat.id, 'у тебя средняя пипка')
+
+        elif 20 <= a < 35:
+            msg = bot.send_message(messag.chat.id,
+                                   'Хм, неплохо. У тебя большая пипка')
+        else:
+            msg = bot.send_message(messag.chat.id, 'Так все и поверили... '
+                                                   'Ебанутый? (Напиши "Да"))')
+        bot.register_next_step_handler(msg, send_pizda)
+    except Error:
+        bot.reply_to(messag, 'ERROR')
+
+
 def send_to(chat, messag, number_of_message=1):
     try:
         for i in range(number_of_message):
@@ -229,6 +255,8 @@ def get_text_messages(messag):
         pisun(messag)
     elif messag.text.lower() == '/time':
         bot.reply_to(messag, current_time())
+    elif messag.text.lower() == '/размер':
+        bot.register_next_step_handler(messag, which_size())
     elif messag.text.lower() == 'cmd':
         if messag.from_user.id == 410718594:
             bot.register_next_step_handler(messag, console)
