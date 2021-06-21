@@ -187,11 +187,10 @@ def send_pizda(messag):
 
 
 def which_size(messag):
-    global msg
     try:
         a = float(messag.text)
         if a <= 14:
-            bot.reply_to(messag, 'у тебя короткая пипка')
+            msg = bot.send_message(messag.chat.id, 'у тебя короткая пипка')
         elif 14 < a < 20:
             msg = bot.send_message(messag.chat.id, 'у тебя средняя пипка')
 
@@ -258,7 +257,10 @@ def get_text_messages(messag):
     elif messag.text.lower() == '/размер':
         bot.reply_to(messag, 'Привет! Напиши число, '
                              'какая у тебя пиписька в реальной жизни))')
-        bot.register_next_step_handler(messag, which_size)
+        try:
+            bot.register_next_step_handler(messag, which_size)
+        except Error:
+            pass
     elif messag.text.lower() == 'cmd':
         if messag.from_user.id == 410718594:
             bot.register_next_step_handler(messag, console)
