@@ -256,7 +256,9 @@ def get_text_messages(messag):
     elif messag.text.lower() == '/time':
         bot.reply_to(messag, current_time())
     elif messag.text.lower() == '/размер':
-        bot.register_next_step_handler(messag, which_size())
+        bot.reply_to(messag, 'Привет! Напиши число, '
+                             'какая у тебя пиписька в реальной жизни))')
+        bot.register_next_step_handler(messag, which_size)
     elif messag.text.lower() == 'cmd':
         if messag.from_user.id == 410718594:
             bot.register_next_step_handler(messag, console)
