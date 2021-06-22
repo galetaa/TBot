@@ -255,7 +255,7 @@ def get_text_messages(messag):
     elif messag.text.lower() == '/school':
         bot.reply_to(messag, school_schedule())
     elif messag.text.lower() == '/писюн':
-        if message.from_user.id == 610736217 and flag_for_ilya == 0:
+        if messag.from_user.id == 610736217 and flag_for_ilya == 0:
             edit_size_of_dick(messag, 0)
             flag_for_ilya +=1
         else:
