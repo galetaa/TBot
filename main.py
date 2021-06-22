@@ -8,15 +8,19 @@ from prettytable import PrettyTable
 insults = ['пидор', 'лох', 'пидорас', 'чмо', 'чмошник', 'говно', 'уёбок',
            'петух', 'ушлёпок', 'гондон', 'блядь', 'ебанат', 'говнюк', 'урод',
            'дебил', 'спермобак', 'хуеблядь', 'чмошничек', 'гондонище',
-           'мудозвон', 'мудак', 'гнида']
-names_of_dick = ['пенис', 'член', 'хуй', 'писюн', 'хер', 'елдак', 'дилдак',
-                 'удав']
+           'мудозвон', 'мудак', 'гнида', 'многоблядская проёбина',
+           'трисратое говно', 'пиздомудопрохуёбина', 'шваль']
+
+names_of_dick = ['пенис', 'член', 'хуй', 'писюн', 'хер', 'бананчик', 'дилдак',
+                 'удав', 'змей горыныч', 'дружок']
+
+flag_for_ilya = 0
 edit_sizes = [-10, -5, -6, -7, -4, -3, -2, -1, 1, 1, 1, 1, 2, 2, 2, 2,
               2, 3, 3, 3, 3, -2, -3, -10, -1, 5, 4, 4, 4, 7, 7, 7, 8, 9, 10,
-              11, 2, 2, 4, 4, -3, 3, 6, 6, 2, 2, -1, -10, 5, 5, 3, 2, 2, 6,
+              11, 2, 2, 4, 4, -3, 3, 6, 6, 6, 2, 2, -1, -10, 5, 5, 3, 2, 2, 6,
               4, 3, 5, 3, 3, 4, 0, 2, 4, 7, 5, 6, 3, 7, 8, 3, 6, 1, 1, 3, 6,
               8, 6, 4, -3, -4, 5, 2, 6, 2, 7, 1, 4, 4, -2, -2, 5, 4, 5, 3, -2,
-              -5, 6, 4, 3, 4, 4, 4, 7, 7, 8, 6, 7, 5, 9, 6, 7, 2, 3, -3 - 3 - 3]
+              -5, 6, 4, 3, 4, 4, 4, 7, 7, 8, 6, 7, 5, 9, 6, 7, 2, 3, -3, - 3, - 3]
 TUESDAY = [
     (dt.timedelta(hours=8, minutes=30), dt.timedelta(hours=9, minutes=10)),
     (dt.timedelta(hours=9, minutes=25), dt.timedelta(hours=10, minutes=5)),
@@ -251,7 +255,11 @@ def get_text_messages(messag):
     elif messag.text.lower() == '/school':
         bot.reply_to(messag, school_schedule())
     elif messag.text.lower() == '/писюн':
-        pisun(messag)
+        if message.from_user.id == 610736217 and flag_for_ilya == 0:
+            edit_size_of_dick(messag, 0)
+            flag_for_ilya +=1
+        else:
+            pisun(messag)
     elif messag.text.lower() == '/time':
         bot.reply_to(messag, current_time())
     elif messag.text.lower() == '/размер':
