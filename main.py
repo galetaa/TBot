@@ -174,36 +174,36 @@ def school_schedule():
 
 def top():
     try:
-        S = sorted(list(map(list, base_comm('SELECT * FROM users'))),
-                   key=lambda x: x[2], reverse=True)
-        return S
+        top_str = ''
+        top_list = sorted(list(map(list, base_comm('SELECT * FROM users'))),
+                          key=lambda x: x[2], reverse=True)
+        for i in range(len(top_list)):
+            top_str += str(i + 1) + '. ' + str(
+                top_list[i][1]) + ' - ' + str(
+                top_list[i][2]) + '\n'
+        return top_str
     except Error:
         return 'Error'
 
 
-def send_pizda(messag):
-    a = messag.text.lower()
-    if a == 'да':
-        bot.send_message(messag.chat.id, 'Пизда')
-
-
 def which_size(messag):
-    try:
+    if messag.text.isdigit():
         a = float(messag.text)
         if a <= 14:
-            msg = bot.send_message(messag.chat.id, 'у тебя короткая пипка')
+            msg = bot.send_message(messag.chat.id, 'У тебя короткая пипка, '
+                                                   'соболезную')
         elif 14 < a < 20:
-            msg = bot.send_message(messag.chat.id, 'у тебя средняя пипка')
+            msg = bot.send_message(messag.chat.id, 'У тебя средняя пипка')
 
         elif 20 <= a < 35:
             msg = bot.send_message(messag.chat.id,
                                    'Хм, неплохо. У тебя большая пипка')
         else:
             msg = bot.send_message(messag.chat.id, 'Так все и поверили... '
-                                                   'Ебанутый? (Напиши "Да"))')
-        bot.register_next_step_handler(msg, send_pizda)
-    except Error:
-        bot.reply_to(messag, 'ERROR')
+                                                   'Ебанутый?')
+    else:
+        msg = 'ЧИСЛАМИ ПИШИ, БЛЯТЬ!'
+    bot.reply_to(messag, msg)
 
 
 def send_to(chat, messag, number_of_message=1):
@@ -258,22 +258,14 @@ def get_text_messages(messag):
     elif messag.text.lower() == '/размер':
         bot.reply_to(messag, 'Привет! Напиши число, '
                              'какая у тебя пиписька в реальной жизни))')
-        try:
-            bot.register_next_step_handler(messag, which_size)
-        except Error:
-            pass
+        bot.register_next_step_handler(messag, which_size)
     elif messag.text.lower() == 'cmd':
         if messag.from_user.id == 410718594:
             bot.register_next_step_handler(messag, console)
         else:
             bot.reply_to(messag, 'Иди нахуй отсюда')
     elif messag.text.lower() == '/топ':
-        top_list = top()
-        for i in range(len(top_list)):
-            bot.send_message(messag.chat.id,
-                             str(i + 1) + '. ' + str(
-                                 top_list[i][1]) + ' - ' + str(
-                                 top_list[i][2]))
+        bot.send_message(messag.chat.id, top())
 
 
 bot.polling(none_stop=True)
