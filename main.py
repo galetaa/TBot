@@ -194,17 +194,14 @@ def which_size(messag):
     if messag.text.isdigit():
         a = float(messag.text)
         if a <= 14:
-            msg = bot.send_message(messag.chat.id, 'У тебя короткая пипка, '
-                                                   'соболезную')
+            msg = 'У тебя короткая пипка, соболезную'
         elif 14 < a < 20:
-            msg = bot.send_message(messag.chat.id, 'У тебя средняя пипка')
+            msg = 'У тебя средняя пипка'
 
         elif 20 <= a < 35:
-            msg = bot.send_message(messag.chat.id,
-                                   'Хм, неплохо. У тебя большая пипка')
+            msg = 'Хм, неплохо. У тебя большая пипка'
         else:
-            msg = bot.send_message(messag.chat.id, 'Так все и поверили... '
-                                                   'Ебанутый?')
+            msg = 'Так все и поверили... Ебанутый?'
     else:
         msg = 'ЧИСЛАМИ ПИШИ, БЛЯТЬ!'
     bot.reply_to(messag, msg)
