@@ -249,6 +249,27 @@ def start(messag):
     register_user(messag.from_user.id, messag.from_user.username)
 
 
+@bot.message_handler(commands=['help'])
+def help(messag):
+    bot.reply_to(messag, 'Это бот, чтобы мериться своими виртуальными '
+                         'писюнами.\nхуууууй\nхуйххуйхуй')
+
+
+@bot.message_handler(commands=['pisun'])
+def command_pisun(messag):
+    pisun(messag)
+
+
+@bot.message_handler(commands=['my_length'])
+def command_pisun(messag):
+    reply_size_of_dick(messag)
+
+
+@bot.message_handler(commands=['top'])
+def command_pisun(messag):
+    bot.send_message(messag.chat.id, top())
+
+
 @bot.message_handler(content_types=['text'])
 def get_text_messages(messag):
     if messag.text.lower() == '/длина':
