@@ -10,14 +10,17 @@ insults = ['пидор', 'лох', 'пидорас', 'чмо', 'чмошник',
            'дебил', 'спермобак', 'хуеблядь', 'чмошничек', 'гондонище',
            'мудозвон', 'мудак', 'гнида', 'многоблядская проёбина',
            'трисратое говно', 'пиздомудопрохуёбина', 'шваль']
+
 names_of_dick = ['пенис', 'член', 'хуй', 'писюн', 'хер', 'бананчик', 'дилдак',
                  'удав', 'змей горыныч', 'дружок']
+
 edit_sizes = [-10, -5, -6, -7, -4, -3, -2, -1, 1, 1, 1, 1, 2, 2, 2, 2,
               2, 3, 3, 3, 3, -2, -3, -10, -1, 5, 4, 4, 4, 7, 7, 7, 8, 9, 10,
               11, 2, 2, 4, 4, -3, 3, 6, 6, 2, 2, -1, -10, 5, 5, 3, 2, 2, 6,
               4, 3, 5, 3, 3, 4, 0, 2, 4, 7, 5, 6, 3, 7, 8, 3, 6, 1, 1, 3, 6,
               8, 6, 4, -3, -4, 5, 2, 6, 2, 7, 1, 4, 4, -2, -2, 5, 4, 5, 3, -2,
               -5, 6, 4, 3, 4, 4, 4, 7, 7, 8, 6, 7, 5, 9, 6, 7, 2, 3, -3 - 3 - 3]
+
 TUESDAY = [
     (dt.timedelta(hours=8, minutes=30), dt.timedelta(hours=9, minutes=10)),
     (dt.timedelta(hours=9, minutes=25), dt.timedelta(hours=10, minutes=5)),
@@ -35,6 +38,7 @@ TUESDAY = [
         dt.timedelta(hours=13, minutes=30),
         dt.timedelta(hours=14, minutes=10)),
     (dt.timedelta(hours=14, minutes=20), dt.timedelta(hours=15))]
+
 OTHER = [
     (dt.timedelta(hours=8, minutes=30), dt.timedelta(hours=9, minutes=10)),
     (dt.timedelta(hours=9, minutes=25), dt.timedelta(hours=10, minutes=5)),
@@ -238,10 +242,13 @@ message = bot.message_handlers
 
 @bot.message_handler(commands=['start'])
 def start(messag):
+    keyboard = telebot.types.ReplyKeyboardMarkup(True, False)
+    keyboard.row('/писюн', '/топ')
+    keyboard.row('/длина', '/размер')
     bot.reply_to(
         messag, 'Привет, ' + choice(
             insults) + '. Посмотрим на твой писюн....'
-                       ' так так так... Напиши «/писюн»')
+                       ' так так так... Напиши «/писюн»', reply_markup=keyboard)
     register_user(messag.from_user.id, messag.from_user.username)
 
 
@@ -249,23 +256,23 @@ def start(messag):
 def get_text_messages(messag):
     if messag.text.lower() == '/длина':
         reply_size_of_dick(messag)
-    elif messag.text.lower() == '/school':
-        bot.reply_to(messag, school_schedule())
+    elif messag.text.lower() == '/топ':
+        bot.send_message(messag.chat.id, top())
     elif messag.text.lower() == '/писюн':
         pisun(messag)
-    elif messag.text.lower() == '/time':
-        bot.reply_to(messag, current_time())
     elif messag.text.lower() == '/размер':
         bot.reply_to(messag, 'Привет! Напиши число, '
                              'какая у тебя пиписька в реальной жизни))')
         bot.register_next_step_handler(messag, which_size)
+    elif messag.text.lower() == '/school':
+        bot.send_message(messag.chat.id, school_schedule())
+    elif messag.text.lower() == 'timee':
+        bot.reply_to(messag, current_time())
     elif messag.text.lower() == 'cmd':
         if messag.from_user.id == 410718594:
             bot.register_next_step_handler(messag, console)
         else:
             bot.reply_to(messag, 'Иди нахуй отсюда')
-    elif messag.text.lower() == '/топ':
-        bot.send_message(messag.chat.id, top())
 
 
 bot.polling(none_stop=True)
