@@ -222,7 +222,7 @@ def top(messag):
             top_str += str(i + 1) + '. ' + str(
                 top_list[i][1]) + ' - ' + str(
                 top_list[i][2]) + '\n'
-        return top_str
+        bot.send_message(messag.chat.id, top_str)
     except Error:
         bot.send_message(messag.chat.id, 'FAIL')
 
