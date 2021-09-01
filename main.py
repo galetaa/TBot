@@ -258,7 +258,7 @@ def edit_base(cell, new_value, user_id):
         return 'FAIL'
 
 
-bot = telebot.TeleBot('1791565125:AAH0BxQSJROn2zQLHkpKwtFlNB2sUuoTqfg')
+bot = telebot.TeleBot('1802055834:AAGLF4vOyLardyZBdA8Nk0yz0XXfBF_UuYA')
 message = bot.message_handlers
 
 
