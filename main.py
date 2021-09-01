@@ -18,42 +18,32 @@ names_of_pussy = ['вагина', 'киска', 'подружка']
 
 names_of_pussy_second = ['вагину', 'киску', 'подружку']
 
-edit_sizes = [-10, -5, -6, -7, -4, -3, -2, -1, 2,
-              2, 3, 3, 3, 3, -2, -3, -10, -1, 5, 4, 4, 4, 7, 7, 7, 8, 9, 10,
-              11, 2, -8, 4, 4, -3, 3, 6, 6, 2, 2, -6, -10, 5, 5, 3, 2, -4, 6,
-              4, 3, 5, 3, 3, 4, 0, 2, 4, 7, 5, 6, 3, 7, 8, 3, 6, -5, 3, 6,
-              8, 6, 4, -3, -4, 5, 2, 6, 2, 7, 4, 4, -2, -2, 5, 4, 5, 3, -2,
-              -5, 6, 4, -6, 4, 4, 4, 7, 7, 8, 6, 7, 5, 9, 6, 7, 2, 3, -9, - 7,
-              - 7, -5, -3, -6, -10, -100, 6, 12, 6, 6, 17]
+edit_sizes = [-10, -5, -6, -7, -19, -18, -15, -1, 15,
+              -15, -3, -10, -400, 5, 40, 4, -200, 7, 7, 70, 8, 9, 10,
+              11, 2, -8, 4, 4, -3, 3, 6, 60, -2000, 2, -6, -10, 5, 5, -333,
+              -4, 6, 4, 3, 5, 3, 3, 4, 0, -666, 4, -700, 5, 6, 3, 7, 8, 3, 6,
+              -5, 3, 6, 8, 6, 4, -300, -4, 5, -13, 6, 10, 7, -44, 4, -16, -16,
+              5, 4, 5, 3, -2, -5, 6, 4, -6, 4, 4, 4, 7, 7, 8, 6, 7, 5, 9, 6, 7,
+              -9, - 7, - 7, -5, -18, -6, -1000, -100, 6, 120, -666, 6, 17]
 
 TUESDAY_SCHEDULE = [
     (dt.timedelta(hours=8, minutes=30), dt.timedelta(hours=9, minutes=10)),
     (dt.timedelta(hours=9, minutes=25), dt.timedelta(hours=10, minutes=5)),
     (dt.timedelta(hours=10, minutes=20), dt.timedelta(hours=11)),
-    (
-        dt.timedelta(hours=11, minutes=15),
-        dt.timedelta(hours=11, minutes=35)),
-    (
-        dt.timedelta(hours=11, minutes=40),
-        dt.timedelta(hours=12, minutes=20)),
-    (
-        dt.timedelta(hours=12, minutes=35),
-        dt.timedelta(hours=13, minutes=15)),
-    (
-        dt.timedelta(hours=13, minutes=30),
-        dt.timedelta(hours=14, minutes=10)),
+    (dt.timedelta(hours=11, minutes=15), dt.timedelta(hours=11, minutes=35)),
+    (dt.timedelta(hours=11, minutes=40), dt.timedelta(hours=12, minutes=20)),
+    (dt.timedelta(hours=12, minutes=35), dt.timedelta(hours=13, minutes=15)),
+    (dt.timedelta(hours=13, minutes=30), dt.timedelta(hours=14, minutes=10)),
     (dt.timedelta(hours=14, minutes=20), dt.timedelta(hours=15))]
 
 OTHER_DAYS_SCHEDULE = [
     (dt.timedelta(hours=8, minutes=30), dt.timedelta(hours=9, minutes=10)),
-    (dt.timedelta(hours=9, minutes=25), dt.timedelta(hours=10, minutes=5)),
-    (dt.timedelta(hours=10, minutes=20), dt.timedelta(hours=11)),
-    (dt.timedelta(hours=11, minutes=20), dt.timedelta(hours=12)),
-    (dt.timedelta(hours=12, minutes=20), dt.timedelta(hours=13)),
-    (
-        dt.timedelta(hours=13, minutes=15),
-        dt.timedelta(hours=13, minutes=55)),
-    (dt.timedelta(hours=14, minutes=5), dt.timedelta(hours=14, minutes=45))]
+    (dt.timedelta(hours=9, minutes=30), dt.timedelta(hours=10, minutes=10)),
+    (dt.timedelta(hours=10, minutes=30), dt.timedelta(hours=11, minutes=10)),
+    (dt.timedelta(hours=11, minutes=30), dt.timedelta(hours=12, minutes=10)),
+    (dt.timedelta(hours=12, minutes=30), dt.timedelta(hours=13, minutes=10)),
+    (dt.timedelta(hours=13, minutes=25), dt.timedelta(hours=14, minutes=5)),
+    (dt.timedelta(hours=14, minutes=15), dt.timedelta(hours=14, minutes=55))]
 
 
 def base_comm(command):
@@ -160,15 +150,6 @@ def edit_size_of_dick(messag, new_size):
                          + '-сантиметровая')
 
 
-def current_time(messag):
-    date_now = dt.datetime.now() + dt.timedelta(hours=3)
-    new_time = str(date_now.year) + '-' + str(date_now.month) + '-' + str(
-        date_now.day) + '-' + str(date_now.hour) + '-' + str(
-        dt.datetime.now(
-        ).minute)
-    bot.send_message(messag.chat.id, new_time)
-
-
 def pisun(messag):
     last_req_list = list(map(int, base_comm(
         'SELECT last_dick_request FROM users WHERE user_id =' +
@@ -231,7 +212,9 @@ def which_size(messag):
     def which_size_second_part(messag2):
         if messag2.text.isdigit():
             a = float(messag2.text)
-            if a <= 14:
+            if a == 0:
+                text_to_send = 'Иди отсюда'
+            elif 0 < a <= 14:
                 text_to_send = 'У тебя короткая пипка, соболезную'
             elif 14 < a < 20:
                 text_to_send = 'У тебя средняя пипка'
@@ -293,10 +276,11 @@ def start(messag):
 
 @bot.message_handler(commands=['help'])
 def help(messag):
-    bot.reply_to(messag, 'Это бот, чтобы мериться своими виртуальными писюнами.'
+    bot.reply_to(messag, 'Вот основные команды:'
                          '\n/писюн - проверить свой писюн\n/топ - '
                          'список рекордсменов\n/длина - посмотреть длину '
-                         'писюна\n/размер - хуйня какая-то')
+                         'писюна\n/размер - профессиональная оценка твоего '
+                         'писюна')
 
 
 @bot.message_handler(commands=['pisun'])
@@ -326,8 +310,6 @@ def get_text_messages(messag):
         which_size(messag)
     elif messag.text.lower() == '/school':
         school_schedule(messag)
-    elif messag.text.lower() == 'timee':
-        current_time(messag)
     elif messag.text.lower() == 'cmd':
         if messag.from_user.id == 410718594:
             bot.register_next_step_handler(messag, console)
