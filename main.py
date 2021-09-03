@@ -185,13 +185,17 @@ def school_schedule(messag):
     if date_week == 1:
         for i in TUESDAY_SCHEDULE:
             if i[0] <= time <= i[1]:
-                bot.send_message(messag.chat.id, i[1] - time)
+                bot.send_message(messag.chat.id,
+                                 str((i[1] - time).seconds // 60) + ' minutes.')
+                flag = 1
     else:
         for i in OTHER_DAYS_SCHEDULE:
             if i[0] <= time <= i[1]:
-                bot.send_message(messag.chat.id, i[1] - time)
+                bot.send_message(messag.chat.id,
+                                 str((i[1] - time).seconds // 60) + ' minutes.')
+                flag = 1
     if not flag:
-        bot.send_message(messag.chat.id, 'Ты ёбнутый?, Иди спи')
+        bot.send_message(messag.chat.id, 'Иди спи')
 
 
 def top(messag):
