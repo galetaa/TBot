@@ -213,7 +213,8 @@ def top(messag):
 
 
 def change_nick(messag):
-    edit_base('username',f"'{messag.text}'", messag.from_user.id)
+    edit_base('username', f"'{messag.text}'", messag.from_user.id)
+    bot.reply_to(messag, 'Готово')
 
 
 def which_size(messag):
