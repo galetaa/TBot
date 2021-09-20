@@ -212,6 +212,10 @@ def top(messag):
         bot.send_message(messag.chat.id, 'FAIL')
 
 
+def change_nick(messag):
+    edit_base('username', '"' + messag.text + '"', messag.from_user.id)
+
+
 def which_size(messag):
     def which_size_second_part(messag2):
         if messag2.text.isdigit():
@@ -248,7 +252,7 @@ def send_to(chat, messag, number_of_message=1):
 def console(messag):
     try:
         result = eval(messag.text)
-    except Error:
+    except (Error, SyntaxError, SystemError, ZeroDivisionError):
         result = 'FAIL'
     bot.reply_to(messag, result)
 
@@ -283,7 +287,6 @@ def help(messag):
     bot.reply_to(messag, 'Вот основные команды:'
                          '\n/писюн - проверить свой писюн\n/топ - '
                          'список рекордсменов\n/длина - посмотреть длину '
-                         'писюна\n/размер - профессиональная оценка твоего '
                          'писюна')
 
 
@@ -302,19 +305,15 @@ def command_top(messag):
     top(messag)
 
 
+@bot.message_handler(commands=['change_nick'])
+def command_change_nick(messag):
+    bot.reply_to(messag, 'Напиши свой новый ник')
+    bot.register_next_step_handler(messag, change_nick)
+
+
 @bot.message_handler(content_types=['text'])
 def get_text_messages(messag):
-    if messag.text.lower() == '/длина':
-        reply_size_of_dick(messag)
-    elif messag.text.lower() == '/топ':
-        top(messag)
-    elif messag.text.lower() == '/писюн':
-        pisun(messag)
-    elif messag.text.lower() == '/размер':
-        which_size(messag)
-    elif messag.text.lower() == '/school':
-        school_schedule(messag)
-    elif messag.text.lower() == 'cmd':
+    if messag.text.lower() == 'cmd':
         if messag.from_user.id == 410718594:
             bot.register_next_step_handler(messag, console)
         else:
