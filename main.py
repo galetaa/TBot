@@ -213,7 +213,7 @@ def top(messag):
 
 
 def change_nick(messag):
-    edit_base('username', '"' + messag.text + '"', messag.from_user.id)
+    edit_base('username',f"'{messag.text}'", messag.from_user.id)
 
 
 def which_size(messag):
@@ -259,6 +259,7 @@ def console(messag):
 
 def edit_base(cell, new_value, user_id):
     try:
+        s = f"UPDATE users SET {cell} = {new_value} WHERE user_id = {user_id}"
         base_comm(f"UPDATE users SET {cell} = {new_value} WHERE user_id = "
                   f"{user_id}")
         return 'SUCCESS'
