@@ -313,6 +313,11 @@ def command_change_nick(messag):
     bot.register_next_step_handler(messag, change_nick)
 
 
+@bot.message_handler(commands=['school'])
+def command_school(messag):
+    messag.reply(school_schedule(messag))
+
+
 @bot.message_handler(content_types=['text'])
 def get_text_messages(messag):
     if messag.text.lower() == 'cmd':
