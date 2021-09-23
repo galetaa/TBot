@@ -5,26 +5,25 @@ from psycopg2 import Error
 from random import choice
 from prettytable import PrettyTable
 
-insults = ['пидор', 'лох', 'пидорас', 'чмо', 'чмошник', 'говно', 'уёбок',
+INSULTS = ['пидор', 'лох', 'пидорас', 'чмо', 'чмошник', 'говно', 'уёбок',
            'петух', 'ушлёпок', 'гондон', 'блядь', 'ебанат', 'говнюк', 'урод',
            'дебил', 'спермобак', 'хуеблядь', 'чмошничек', 'гондонище',
            'мудозвон', 'мудак', 'гнида', 'многоблядская проёбина',
            'трисратое говно', 'пиздомудопрохуёбина', 'шваль']
 
-names_of_dick = ['пенис', 'член', 'хуй', 'писюн', 'хер', 'бананчик', 'дилдак',
-                 'удав', 'змей горыныч', 'дружок']
+DICK_NAMES = ['пенис', 'член', 'хуй', 'писюн', 'хер', 'бананчик', 'дилдак',
+              'удав', 'змей горыныч', 'дружок']
 
-names_of_pussy = ['вагина', 'киска', 'подружка']
+PUSSY_NAMES = ['вагина', 'киска', 'подружка']
 
-names_of_pussy_second = ['вагину', 'киску', 'подружку']
+PUSSY_NAMES_SECOND = ['вагину', 'киску', 'подружку']
 
-edit_sizes = [-10, -5, -6, -7, -19, -18, -15, -1, 15,
-              -15, -3, -10, 5, 40, 4, -200, 7, 7, 70, 8, 9, 10,
-              11, 2, -8, 4, 4, 43, 3, 6, 60, 2, -6, -10, 5, 5, -333,
-              -4, 6, 4, 3, 5, 3, 3, 4, 0, 4, 5, 6, 3, 7, 8, 3, 6,
-              -5, 3, 6, 8, 6, 4, -300, -4, 5, -13, 6, 10, 7, -44, 4, -16, -16,
-              5, 4, 5, 3, -2, -5, 6, 4, -6, 4, 4, 4, 7, 7, 8, 6, 7, 5, 91, 6, 7,
-              -9, - 7, - 7, -5, -18, -6, -100, 6, 120, -666, 6, 17]
+EDIT_SIZES = [-100, -19, -16, -16, -15, -13, -10, -10, -10, -9, -8, -8, -7, -7,
+              -7, -6, -6, -6, -6, -5, -5, -5, -5, -5, -4, -4, -4, -3, -2, -1,
+              -1, 0, 3, 3, 3, 4, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+              6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 9, 9, 9, 9, 10, 11,
+              11, 11, 12, 12, 13, 14, 14, 15, 15, 15, 16, 16, 17, 17, 18, 21,
+              21, 27, 28, 32, 40, 43, 60, 70, 91, 100, 120]
 
 TUESDAY_SCHEDULE = [
     (dt.timedelta(hours=8, minutes=30), dt.timedelta(hours=9, minutes=10)),
@@ -88,12 +87,12 @@ def print_base():
 def reply_size_of_dick(messag):
     if base_comm('SELECT size_of_dick FROM users WHERE user_id =' + str(
             messag.from_user.id))[0][0] >= 0:
-        bot.reply_to(messag, 'Твой ' + choice(names_of_dick) + ' ' + str(
+        bot.reply_to(messag, 'Твой ' + choice(DICK_NAMES) + ' ' + str(
             base_comm(
                 'SELECT size_of_dick FROM users WHERE user_id =' +
                 str(messag.from_user.id))[0][0]) + '-сантиметровый')
     else:
-        bot.reply_to(messag, 'Твоя ' + choice(names_of_pussy) + ' ' + str(abs(
+        bot.reply_to(messag, 'Твоя ' + choice(PUSSY_NAMES) + ' ' + str(abs(
             base_comm(
                 'SELECT size_of_dick FROM users WHERE user_id =' +
                 str(messag.from_user.id))[0][0])) + '-сантиметровая')
@@ -112,41 +111,40 @@ def register_user(user_id, username):
         base_comm(insert_to_db_query)
 
 
-def edit_size_of_dick(messag, new_size):
+def edit_size_of_dick(messag, edit_size):
     prev_size = base_comm('SELECT size_of_dick FROM users WHERE user_id =' +
                           str(messag.from_user.id))[0][0]
-    if (new_size != 0) and (prev_size + new_size >= 0):
-        base_comm('UPDATE users SET size_of_dick = ' + str(prev_size + new_size)
-                  + ' WHERE user_id = ' + str(messag.from_user.id))
-        if new_size > 0:
+    if (edit_size != 0) and (prev_size + edit_size >= 0):
+        base_comm(edit_base('size_of_dick', prev_size + edit_size,
+                            messag.from_user.id))
+        if edit_size > 0:
             bot.reply_to(messag,
-                         'Твой ' + choice(names_of_dick) + ' вырос на '
-                         + str(new_size)
-                         + ' см. Теперь он ' + str(new_size + prev_size)
+                         'Твой ' + choice(DICK_NAMES) + ' вырос на '
+                         + str(edit_size)
+                         + ' см. Теперь он ' + str(edit_size + prev_size)
                          + '-сантиметровый')
         else:
-            bot.reply_to(messag, 'Твой ' + choice(names_of_dick)
-                         + ' уменьшился на ' + str(abs(new_size))
-                         + ' см. Теперь он ' + str(new_size + prev_size)
+            bot.reply_to(messag, 'Твой ' + choice(DICK_NAMES)
+                         + ' уменьшился на ' + str(abs(edit_size))
+                         + ' см. Теперь он ' + str(edit_size + prev_size)
                          + '-сантиметровый')
-    elif new_size == 0:
-        base_comm('UPDATE users SET size_of_dick = ' + str(0)
-                  + ' WHERE user_id = ' + str(messag.from_user.id))
-        bot.reply_to(messag, 'Твой ' + choice(names_of_dick) + ' отвалился...')
+    elif edit_size == 0:
+        base_comm(edit_base('size_of_dick', 0, messag.from_user.id))
+        bot.reply_to(messag, 'Твой ' + choice(DICK_NAMES) + ' отвалился...')
     else:
-        base_comm('UPDATE users SET size_of_dick = ' + str(prev_size + new_size)
-                  + ' WHERE user_id = ' + str(messag.from_user.id))
-        if new_size > 0:
+        base_comm(edit_base('size_of_dick', prev_size + edit_size,
+                            messag.from_user.id))
+        if edit_size > 0:
             bot.reply_to(messag,
-                         'Твоя ' + choice(names_of_pussy) + ' уменьшилась на '
-                         + str(abs(new_size))
-                         + ' см. Теперь она ' + str(abs(new_size + prev_size))
+                         'Твоя ' + choice(PUSSY_NAMES) + ' уменьшилась на '
+                         + str(abs(edit_size))
+                         + ' см. Теперь она ' + str(abs(edit_size + prev_size))
                          + '-сантиметровая')
         else:
             bot.reply_to(messag,
-                         'Твоя ' + choice(names_of_pussy) + ' увеличилась на '
-                         + str(abs(new_size))
-                         + ' см. Теперь она ' + str(abs(new_size + prev_size))
+                         'Твоя ' + choice(PUSSY_NAMES) + ' увеличилась на '
+                         + str(abs(edit_size))
+                         + ' см. Теперь она ' + str(abs(edit_size + prev_size))
                          + '-сантиметровая')
 
 
@@ -158,7 +156,7 @@ def pisun(messag):
                            last_req_list[2])
     date_now = dt.datetime.now() + dt.timedelta(hours=3)
     if dt.datetime(date_now.year, date_now.month, date_now.day) > last_req:
-        edit_size_of_dick(messag, choice(edit_sizes))
+        edit_size_of_dick(messag, choice(EDIT_SIZES))
         new_time = str(date_now.year) + ' ' + str(
             date_now.month) + ' ' + str(
             date_now.day)
@@ -169,12 +167,12 @@ def pisun(messag):
         if base_comm('SELECT size_of_dick FROM users WHERE user_id =' + str(
                 messag.from_user.id))[0][0] >= 0:
             bot.reply_to(messag,
-                         'Жди, ' + choice(insults) + '. Сегодня на твой '
-                         + choice(names_of_dick) + ' смотреть не буду')
+                         'Жди, ' + choice(INSULTS) + '. Сегодня на твой '
+                         + choice(DICK_NAMES) + ' смотреть не буду')
         else:
             bot.reply_to(messag,
-                         'Жди, ' + choice(insults) + '. Сегодня на твою '
-                         + choice(names_of_pussy_second) + ' смотреть не буду')
+                         'Жди, ' + choice(INSULTS) + '. Сегодня на твою '
+                         + choice(PUSSY_NAMES_SECOND) + ' смотреть не буду')
 
 
 def school_schedule(messag):
@@ -274,12 +272,9 @@ message = bot.message_handlers
 
 @bot.message_handler(commands=['start'])
 def start(messag):
-    keyboard = telebot.types.ReplyKeyboardMarkup(True, False)
-    keyboard.row('/писюн', '/топ')
-    keyboard.row('/длина', '/размер')
     bot.send_message(
         messag.chat.id,
-        'Привет, ' + choice(insults) + '. Посмотрим на твой писюн....'
+        'Привет, ' + choice(INSULTS) + '. Посмотрим на твой писюн....'
                                        ' так так так... Напиши «/писюн»')
     register_user(messag.from_user.id, messag.from_user.username)
 
@@ -323,8 +318,6 @@ def get_text_messages(messag):
     if messag.text.lower() == 'cmd':
         if messag.from_user.id == 410718594:
             bot.register_next_step_handler(messag, console)
-        else:
-            pass
 
 
 bot.polling(none_stop=True)
