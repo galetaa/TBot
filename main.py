@@ -313,6 +313,11 @@ def command_change_nick(messag):
     bot.register_next_step_handler(messag, change_nick)
 
 
+@bot.message_handler(commands=['school'])
+def command_school(messag):
+    bot.reply_to(messag, school_schedule(messag))
+
+
 @bot.message_handler(content_types=['text'])
 def get_text_messages(messag):
     if messag.text.lower() == 'cmd':
@@ -320,8 +325,6 @@ def get_text_messages(messag):
             bot.register_next_step_handler(messag, console)
         else:
             pass
-    elif messag.text.lower() == '/school':
-        messag.reply(school_schedule(messag))
 
 
 bot.polling(none_stop=True)
